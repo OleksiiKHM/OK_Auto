@@ -1,3 +1,4 @@
+/*
 package FirstPackage;
 
 import org.junit.AfterClass;
@@ -23,11 +24,13 @@ public class VeryFirstTest {
         myDriver.manage().window().maximize();
     }
 
-   /* @AfterClass
+   */
+/* @AfterClass
     public static void close() {
         myDriver.quit();
     }
-*/
+*//*
+
     @Test
     public void theTest() {
         myDriver.findElement(By.id("search_query_top")).click();
@@ -35,3 +38,4 @@ public class VeryFirstTest {
         myDriver.findElement(By.id("search_query_top")).submit();
     }
 }
+*/
