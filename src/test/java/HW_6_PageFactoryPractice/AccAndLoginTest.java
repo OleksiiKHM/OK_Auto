@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 
-@FixMethodOrder(MethodSorters.JVM)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AccAndLoginTest {
     static WebDriver myDriver = new ChromeDriver();
     static LoginPage loginPage;
@@ -17,24 +17,35 @@ public class AccAndLoginTest {
     @BeforeClass
     public static void setUp() {
         myDriver.get("http://automationpractice.com/index.php?controller=authentication&back=my-account");
-        loginPage = PageFactory.initElements(myDriver, LoginPage.class);
-        accountPage = PageFactory.initElements(myDriver, AccountPage.class);
+        loginPage = new LoginPage(myDriver);
+        accountPage = new AccountPage(myDriver);
+
     }
 
     @AfterClass
-    public static void tearDown(){
+    public static void tearDown() {
         myDriver.quit();
-    }
-
-    @Test
-    public void normalLogIn() {
-        loginPage.logIn(emailInput, passwdInput);
-        Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=my-account");
     }
 
     @Ignore
     @Test
-    public void logOut() {
+    public void _1_normalLogIn() {
+        loginPage.logIn(emailInput, passwdInput);
+        Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=my-account");
+    }
+
+    @Test
+    public void _2_chainLogIn() {
+        loginPage
+                .enterUserEmail(emailInput)
+                .enterPassword(passwdInput)
+                .clickSubmit();
+        Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=my-account");
+    }
+
+
+    @Test
+    public void _3_logOut() {
         Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=my-account");
         accountPage.logout();
         Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=authentication&back=my-account");
