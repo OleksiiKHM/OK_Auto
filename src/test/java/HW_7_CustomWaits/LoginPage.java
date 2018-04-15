@@ -1,4 +1,4 @@
-package HW_6_PageFactoryPractice;
+package HW_7_CustomWaits;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,6 +8,9 @@ import org.openqa.selenium.support.PageFactory;
 public class LoginPage {
 
     public WebDriver driver;
+
+    public String loginPageUrl = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
+    public String loginPageTitle = "Login - My Store";
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
@@ -22,6 +25,12 @@ public class LoginPage {
 
     @FindBy(id = "SubmitLogin")
     WebElement submitButton;
+
+    @FindBy(id = "search_query_top")
+    WebElement searchField;
+
+    @FindBy(xpath = "//h1[@class=\"page-heading  product-listing\"]")
+    WebElement productListing;
 
     public LoginPage enterUserEmail(String userEmail) {
         emailField.sendKeys(userEmail);
@@ -42,6 +51,13 @@ public class LoginPage {
         enterPassword(password);
         clickSubmit();
         return new AccountPage(driver);
+    }
+
+    public void executeSearch(String query) {
+        searchField.click();
+        searchField.clear();
+        searchField.sendKeys(query);
+        searchField.submit();
     }
 
 }

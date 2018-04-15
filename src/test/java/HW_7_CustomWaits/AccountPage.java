@@ -1,4 +1,4 @@
-package HW_6_PageFactoryPractice;
+package HW_7_CustomWaits;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

@@ -1,25 +1,35 @@
-package HW_6_PageFactoryPractice;
+package HW_7_CustomWaits;
 
+import HW_7_CustomWaits.CustomExpectedConditions.pageIsLoaded;
+import HW_7_CustomWaits.CustomExpectedConditions.listNthElementHasText;
+import HW_7_CustomWaits.CustomExpectedConditions.stalenessOfElement;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import javax.xml.xpath.XPath;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AccAndLoginTest {
     static WebDriver myDriver = new ChromeDriver();
     static LoginPage loginPage;
     static AccountPage accountPage;
-    String emailInput = "hillbilly1969@yahoo.com";
-    String passwdInput = "Amuricastrong";
+
+    static String loginPageUrl = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
+    static String loginPageTitle = "Login - My Store";
+
+    WebDriverWait wait = new WebDriverWait(myDriver, 10);
 
     @BeforeClass
     public static void setUp() {
-        myDriver.get("http://automationpractice.com/index.php?controller=authentication&back=my-account");
+        myDriver.get(loginPageUrl);
         loginPage = new LoginPage(myDriver);
         accountPage = new AccountPage(myDriver);
-
     }
 
     @AfterClass
@@ -27,27 +37,23 @@ public class AccAndLoginTest {
         myDriver.quit();
     }
 
-    @Ignore
     @Test
-    public void _1_normalLogIn() {
-        loginPage.logIn(emailInput, passwdInput);
-        Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=my-account");
+    public void _3_pageIsLoadedConditionTest() {
+        loginPage.executeSearch("Shirt");
+        wait.until(new pageIsLoaded("Search - My Store", "http://automationpractice.com/index.php?controller=search&orderby=position&orderway=desc&search_query"));
     }
 
     @Test
-    public void _2_chainLogIn() {
-        loginPage
-                .enterUserEmail(emailInput)
-                .enterPassword(passwdInput)
-                .clickSubmit();
-        Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=my-account");
+    public void _4_listNthElementHasTextConditionTest() {
+        loginPage.executeSearch("Dress");
+        wait.until(new listNthElementHasText("//a[@class='product-name']", 10, "Dress"));
     }
-
 
     @Test
-    public void _3_logOut() {
-        Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=my-account");
-        accountPage.logout();
-        Assert.assertEquals(myDriver.getCurrentUrl(), "http://automationpractice.com/index.php?controller=authentication&back=my-account");
+    public void _5_stalenessOfElementConditionTest() {
+        myDriver.navigate().to(loginPageUrl);
+        wait.until(new pageIsLoaded(loginPageTitle, "http://automationpractice.com/index.php?controller=authentication&back=my-account"));
+        wait.until(new stalenessOfElement(loginPage.productListing));
     }
+
 }
